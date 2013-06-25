@@ -31,6 +31,7 @@ class Tweeter
   @@Tweeters = []
   @@Points = []
   @tweet_point = 1
+   #will use to calculate consecutiveness
 
 # Create an array of dates included in queries which will be crossed against the tweet_counter loop
 # to count tweest on a per-day basis
@@ -51,23 +52,23 @@ class Tweeter
     @@Tweeters << @handle
   end
 
-  #count tweets
+  #count tweets -- FINISHED
   def tweet_counter(handle)
     Dates.week_dates
     i = 0
     @tweets = []
+    @tweets_per_day = [] #array contains number of tweets for each day of the week by index 0 being today and 6 being start of the week
+    @total_tweets = 0
     until i > (Dates.week_dates.length-2) #until the last item in array, which we need to pull today's tweet
       @tweets << Twitter.search("from:#{handle}", :count => 15, :until => Dates.week_dates[i], :since => Dates.week_dates[i+1]).results.map do |status|
-        "#{status.from_user}/ #{status.text} / #{Dates.week_dates[i]}"
-        sleep(1)
+        "#{status.from_user}/ #{status.text} / #{Dates.week_dates[i]}" #if need to test, push this into array and puts it later
+        # sleep(1)
       end
-      puts @tweets[i].length
+      @tweets_per_day.push(@tweets[i].length) #storing on a given day how many tweets were tweeted
+      @total_tweets += @tweets[i].length
       i +=1
     end
-      puts "IT'S WORKING!!!!"
-      @tweets.length
-      puts @tweets.length
-      puts @tweets.inspect
+      @total_tweets
 
   end
 
@@ -81,6 +82,7 @@ class Tweeter
 
 end
 
-youssif = Tweeter.new('s_byrne')
-youssif.tweet_counter('s_byrne')
+shannon = Tweeter.new('s_byrne')
+shannon.tweet_counter('s_byrne')
+
 # youssif.week_dates
