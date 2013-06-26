@@ -47,22 +47,77 @@ class Tweeter
     @total_tweets = 0
     until i > (Dates.week_dates.length-2) #until the last item in array, which we need to pull today's tweet
       @tweets << Twitter.search("from:#{handle}", :count => 5, :until => Dates.week_dates[i], :since => Dates.week_dates[i+1]).results.map do |status|
-        "#{status.from_user}/ #{status.text} / #{Dates.week_dates[i]}" #if need to test, push this into array and puts it later
+        "#{status.id}"
       end
       @tweets_per_day << @tweets[i].length #storing on a given day how many tweets were tweeted to calculate consecutiveness
       @total_tweets += @tweets[i].length
       i +=1
     end
-      puts @total_tweets
+      @total_tweets 
+  end
+
+  #mentions
+  def mention_counter(handle)
+    @mentions = Twitter.search("to:#{handle}", :count => 200, :until => Dates.week_dates[0], :since => Dates.week_dates[6]).results.count
+  end
+
+  #retweet counter to assign points
+  def retweet_count(handle)
+    @retweet_total = 0
+    Twitter.search("from:#{handle}", :count => 2000, :until => Dates.week_dates[0], :since => Dates.week_dates[6]).results.map do |status|
+       @retweet_total += status.retweet_count
+    end
+    @retweet_total
+  end
+
+  #followers (to be used later on when we figure out how to store this in a database and compare week over week changes since
+  #follower numbers cannot be pulled for a particular day as they do not take options, only argument  
+  def follower_counter(handle)
+    @followers1 = Twitter.user("#{handle}", :until => Dates.week_dates[6], :since => Dates.week_dates[7]).follower_count
+    @followers2 = Twitter.user("#{handle}", :until => Dates.week_dates[0], :since => Dates.week_dates[1]).follower_count
+    puts @followers1
+    puts @followers2
+  end
+
+  #use to pass through points method so we don't have to call all the methods
+  def counter(handle)
+    tweet_counter(handle)
+    mention_counter(handle)
+    retweet_count(handle)
   end
 
   #calculate points for original tweets only
   def tweet_points
+    @tweet_points = 0
     @points_per_day = @tweets_per_day.map do |tweets|
-      tweets*3.1
+      tweets*3
     end
-    puts @points_per_day.inspect
+    @points_per_day.each do |points|
+      @tweet_points += points
+    end
   end
+
+  def mention_points
+    @mention_points = @mentions * 6
+  end
+
+  def retweet_points
+    @retweet_points = @retweet_total*1
+  end
+
+  #takes handle as argument to just run all the counter methods to get points
+  def total_points(handle)
+    counter(handle)
+    tweet_points
+    mention_points
+    retweet_points
+    @total_points = @retweet_points + @mention_points + @tweet_points
+    puts @total_points
+  end
+
+  # def follower_points
+
+  # end
 
   def consec_points
     #example of array -> [0,1,2,3,1,4,0]
@@ -87,8 +142,11 @@ class Tweeter
 end
 
 shannon = Tweeter.new
-shannon.tweet_counter('s_byrne')
-shannon.tweet_points
-shannon.consec_points
+# shannon.tweet_counter('makersquare')
+# shannon.tweet_points
+# #shannon.consec_points
+# shannon.tweet_id('makersquare')
+# shannon.tweet_id('makersquare')
+shannon.total_points('s_byrne')
 
-# youssif.week_dates
+
