@@ -13,17 +13,20 @@ class Email
   @@password = ENV['GMAILPSWD']
 
   def self.send(emails)
+    @flock = Flock.new(["sagarispatel","s_byrne","techpeace","makersquare","youssifwashere","lydiaguarino"])
+    @email_body = @flock.email_format
+
     gmail = Gmail.connect(@@username, @@password)
       emails.each do |email|
         gmail.deliver do
           to email
           subject "Your Weekly Mother Flockerboard"
           text_part do
-            body "email_body"
+            body @email_body #this is breaking us!!!!!!! AHHHHH!!!!
           end
           html_part do
             content_type 'text/html; charset=UTF-8'
-            body "email_body"
+            # body @
           end
           # add_file "/path/to/some_image.jpg"
         end
@@ -185,6 +188,7 @@ class Flock
   end
 
   def email_format
+      user_gen
       puts "The Mother Flocker Weekly Leaderboard"
       puts ""
       puts "@#{@flock_array.first[:handle]} is the Mother Flocker of the week!"
@@ -197,11 +201,6 @@ class Flock
 
 end
 
-
-flock = Flock.new(["sagarispatel","s_byrne","techpeace","makersquare","youssifwashere","lydiaguarino"])
-flock.user_gen
-flock.email_format
-# email_body = flock.email_format
-# Email.send(['abdulyoussif@gmail.com','lydiahguarino@gmail.com'])
+Email.send(['abdulyoussif@gmail.com'])
 
 
