@@ -24,8 +24,6 @@ class Dates
 
 end
 
-
-
 class Tweeter
   attr_accessor :total_tweets
 
@@ -67,16 +65,7 @@ class Tweeter
     Twitter.search("from:#{handle} -rt", :count => 2000, :until => Dates.week_dates[0], :since => Dates.week_dates[6]).results.map do |status|
        @retweet_total += status.retweet_count
     end
-    puts @retweet_total
-  end
-
-  #followers (to be used later on when we figure out how to store this in a database and compare week over week changes since
-  #follower numbers cannot be pulled for a particular day as they do not take options, only argument  
-  def follower_counter(handle)
-    @followers1 = Twitter.user("#{handle}", :until => Dates.week_dates[6], :since => Dates.week_dates[7]).follower_count
-    @followers2 = Twitter.user("#{handle}", :until => Dates.week_dates[0], :since => Dates.week_dates[1]).follower_count
-    puts @followers1
-    puts @followers2
+    @retweet_total
   end
 
   #use to pass through points method so we don't have to call all the methods
@@ -90,7 +79,7 @@ class Tweeter
   def tweet_points
     @tweet_points = 0
     @points_per_day = @tweets_per_day.map do |tweets|
-      tweets*3
+      tweets
     end
     @points_per_day.each do |points|
       @tweet_points += points
@@ -98,12 +87,13 @@ class Tweeter
   end
 
   def mention_points
-    @mention_points = @mentions * 6
+    @mention_points = @mentions * 2
+    @mention_points
   end
 
   def retweet_points
-    @retweet_points = @retweet_total*1
-    puts @retweet_points
+    @retweet_points = @retweet_total* 2
+    @retweet_points
   end
 
   #takes handle as argument to just run all the counter methods to get points
@@ -114,7 +104,14 @@ class Tweeter
     mention_points
     retweet_points
     @total_points = @retweet_points + @mention_points + @consec_points
-    puts @total_points
+    @tweeter_hash = {}
+    @tweeter_hash[:handle] = handle
+    @tweeter_hash[:total_points] = @total_points
+    @tweeter_hash[:tweet_points] = @tweet_points
+    @tweeter_hash[:consec_points] = @consec_points
+    @tweeter_hash[:mention_points] = @mention_points
+    @tweeter_hash[:retweet_points] = @retweet_points
+    @tweeter_hash
   end
 
   # def follower_points
@@ -143,31 +140,29 @@ class Tweeter
     @consec_modified.each do |point|
       @consec_points += point
     end
-
     @consec_points
   end
 
-  
+end
+
+class Flock
+  def initialize(array)
+    @array = array
+  end
+
+  def user_gen
+    @flock_array = []
+    @array.each do |handle|
+      @flock_array << Tweeter.new.total_points(handle)
+    end
+    @flock_array.sort_by! {|tweeter| tweeter[:total_points]}.reverse!
+    puts @flock_array.inspect
+  end
 
 end
 
-shannon = Tweeter.new
-# shannon.tweet_counter('makersquare')
-# shannon.tweet_points
-# #shannon.consec_points
-# shannon.tweet_id('makersquare')
-# shannon.tweet_id('makersquare')
-shannon.total_points('s_byrne')
-# shannon.consec_points
-# shannon.mention_points
-shannon.retweet_count('s_byrne')
-# shannon.tweet_points
-puts 'hahahahahah'
-makersquare = Tweeter.new
-makersquare.total_points('makersquare')
-# makersquare.consec_points
-# makersquare.mention_points
-makersquare.retweet_count('makersquare')
-# makersquare.tweet_points
+
+flock = Flock.new(["sagarispatel","s_byrne","techpeace","makersquare","youssifwashere","lydiaguarino"])
+flock.user_gen
 
 
