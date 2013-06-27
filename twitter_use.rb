@@ -64,10 +64,10 @@ class Tweeter
   #retweet counter to assign points
   def retweet_count(handle)
     @retweet_total = 0
-    Twitter.search("from:#{handle}", :count => 2000, :until => Dates.week_dates[0], :since => Dates.week_dates[6]).results.map do |status|
+    Twitter.search("from:#{handle} -rt", :count => 2000, :until => Dates.week_dates[0], :since => Dates.week_dates[6]).results.map do |status|
        @retweet_total += status.retweet_count
     end
-    @retweet_total
+    puts @retweet_total
   end
 
   #followers (to be used later on when we figure out how to store this in a database and compare week over week changes since
@@ -103,15 +103,17 @@ class Tweeter
 
   def retweet_points
     @retweet_points = @retweet_total*1
+    puts @retweet_points
   end
 
   #takes handle as argument to just run all the counter methods to get points
   def total_points(handle)
     counter(handle)
     tweet_points
+    consec_points
     mention_points
     retweet_points
-    @total_points = @retweet_points + @mention_points + @tweet_points
+    @total_points = @retweet_points + @mention_points + @consec_points
     puts @total_points
   end
 
@@ -137,8 +139,16 @@ class Tweeter
       index += 1
       point*i
     end
-    puts @consec_modified.inspect
+    @consec_points = 0
+    @consec_modified.each do |point|
+      @consec_points += point
+    end
+
+    @consec_points
   end
+
+  
+
 end
 
 shannon = Tweeter.new
@@ -148,5 +158,16 @@ shannon = Tweeter.new
 # shannon.tweet_id('makersquare')
 # shannon.tweet_id('makersquare')
 shannon.total_points('s_byrne')
+# shannon.consec_points
+# shannon.mention_points
+shannon.retweet_count('s_byrne')
+# shannon.tweet_points
+puts 'hahahahahah'
+makersquare = Tweeter.new
+makersquare.total_points('makersquare')
+# makersquare.consec_points
+# makersquare.mention_points
+makersquare.retweet_count('makersquare')
+# makersquare.tweet_points
 
 
