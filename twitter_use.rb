@@ -1,10 +1,35 @@
 require 'twitter'
+require 'gmail'
 
 Twitter.configure do |config|
   config.consumer_key = ENV['YOUR_CONSUMER_KEY']
   config.consumer_secret = ENV['YOUR_CONSUMER_SECRET']
   config.oauth_token = ENV['YOUR_OAUTH_TOKEN']
   config.oauth_token_secret = ENV['YOUR_OAUTH_TOKEN_SECRET']
+end
+
+class Email
+  @@username = ENV['GMAILUSER']
+  @@password = ENV['GMAILPSWD']
+
+  def self.send(emails)
+    gmail = Gmail.connect(@@username, @@password)
+      emails.each do |email|
+        gmail.deliver do
+          to email
+          subject "Your Weekly Mother Flockerboard"
+          text_part do
+            body "email_body"
+          end
+          html_part do
+            content_type 'text/html; charset=UTF-8'
+            body "email_body"
+          end
+          # add_file "/path/to/some_image.jpg"
+        end
+      end
+    gmail.logout
+  end
 end
 
 class Dates
@@ -156,7 +181,18 @@ class Flock
       @flock_array << Tweeter.new.total_points(handle)
     end
     @flock_array.sort_by! {|tweeter| tweeter[:total_points]}.reverse!
-    puts @flock_array.inspect
+    @flock_array
+  end
+
+  def email_format
+      puts "The Mother Flocker Weekly Leaderboard"
+      puts ""
+      puts "@#{@flock_array.first[:handle]} is the Mother Flocker of the week!"
+      puts ""
+    @flock_array.each do |tweeter|
+      puts "@#{tweeter[:handle]} | TOTAL POINTS: #{tweeter[:total_points]} | TOTAL RETWEETS: #{tweeter[:retweet_points]/2} | TOTAL MENTIONS: #{tweeter[:mention_points]/2} | TOTAL TWEETS: #{tweeter[:tweet_points]}" 
+      puts ""
+    end
   end
 
 end
@@ -164,5 +200,8 @@ end
 
 flock = Flock.new(["sagarispatel","s_byrne","techpeace","makersquare","youssifwashere","lydiaguarino"])
 flock.user_gen
+flock.email_format
+# email_body = flock.email_format
+# Email.send(['abdulyoussif@gmail.com','lydiahguarino@gmail.com'])
 
 
