@@ -12,8 +12,116 @@ class Email
   @@username = ENV['GMAILUSER']
   @@password = ENV['GMAILPSWD']
 
-  def self.send(emails)
-    flock = Flock.new(["mrshaasha","sagarispatel","s_byrne","techpeace","makersquare","youssifwashere","lydiaguarino","jeremyjboyd"])
+  def self.get_handles
+    @tweeters = []
+    @email_array = []
+    puts "
+
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM7+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMI,Z,,+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM,$,,,7,,MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM,,?7?$$,,,MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM,????I,,,,MMMMMMMMMMMMMMMMM7,DMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM,8???MZ,,,,MMMMMMMMMMMMMMMN,,,,,,ZMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM,,$??:,,,,,MMMMMMMMMMMMM,,,,,,,,:,DMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMM,,,,MMMMMMM,,,,:::,,,,MMMMMMMMMMMM,,,,,,,,,:,:::ZMMMMMMMMMM
+MMMMMMMMMMMMMMMMMO,,,,,,,MMMMMMMMMM,,::,,,,MMMMMMMMMM+,:~:~,,,,,,,,,::::ZMMMMMMM
+MMMMMMMMMMMMMMM ,,,,,M:,,$MMMMMMMMMM,,::,,,ZMMMMMMMM:,:N:::7,,,,,,,,,:::MZZMMMMM
+MMMMMMMMMMMMMM,,,,,,:::,,,MMMMMMMMMI,,,,:,,,MMMMMMM,,::::::::,,,,,,,::::::MMMMMM
+MMMMMMMMMMMMN,,,,,,:::::,,MMMMMMMMMM,,,,:,,,MMMMMM:,::::::::::,,,,,,,::::::MMMMM
+MMMMMMMMMMM:,,,,,,~:::::,,,:MMMMMMMM,,,,:,,,MMMMMM,::::::::::::,,,,,::::::MMMMMM
+MMMMMMMMMM,,,,,,,M:::::::,:,,MMMMMM$,,,,::,,MMMMM,:N::::::::::=:,,,,,::::MMMMMMM
+MMMMMMMMM,,,,,,,,:::::::::::,,MMMMMD,,,,::,,DMMM,,:::::::::::::M,,,,,,:::MOMMMMM
+MMMMMMMM,,,,,,,,+::::::::::::,,,OMM,,,,,::,,MMMM,,:::::::::::::::,,,,,::::MMMMMM
+MMMMMMM,,,,,,,,,::::::::::::+:,,,,?,,,,,:::,8MM,,:M:::::::::::::M,,,,,:::::MMMMM
+MMMMMM,,,,,,,,,M::::::::::::::,,,,,,,,,,:::::DN,,::::::::::::::::M,,,:::::MMMMMM
+MMMMM,,,,,,,,,,:::::::::::::::::,M,,,,,:::::::::I:~::::::::::::::M:,,,:::::MMMMM
+MMMM7,,,,,,,,,M::::::::::::::::::,,,,,,:::::::::::M:::::::::::N:7MM,:,:::~NOMMMM
+MMM:,Z,,,,,,,,M:::::::::::::::::,,,,,,,:::::::::::M:::::::::::ZZMMM,,::M::8MMMMM
+MMZ,M,,,,,,,,~M:::::::::::::::::,,,,,,,:::::::::N:::::::::::7MMMMMM:::::M::MMMMM
+MM,M,,,,,,,,,MZ:N::::::::::::::,,,,,,,,:::::::::7::::::::::?MMMMMMMM:::::8:8MMMM
+MMOM,,,?,M,,,MM:M:::::::::::::O,,,,,,,,::::::::::::::::O:7OMMMMMMMM=:::::Z8MMMMM
+MMM.,M,M,D,,+MMMMD:?::::::::::I:,,:,,,::::::::M::::::::MMM7MMMMMMMMM::::::MMMMMM
+MMMMMM,M,M,,8MMMMMMM::MM:::Z::::::::::::::::::::::::::DMMMMMMMMMMMMM:::M::OMMMMM
+MMMMMMMZ,8,,MMMMMMMMM$MMMMMMMM:::::::::::::::::::::::::8MMMMMMMMMMMMM::ZM:IMMMMM
+MMMMMMMMNM,,MMMMMMMMMMMMMMMMMM:::::::::::::::::::::::~:MMMMMMMMMMMMMM::8MMMMMMMM
+MMMMMMMMMM,,MMMMMMMMMMMMMMMMMM8::::::::::::::::::::::::MMMMMMMMMMMMMM::MMMMMMMMM
+MMMMMMMMMMN,MMMMMMMMMMMMMMMMMMMD:::::::::::::::::::::::MMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMM,MMMMMMMMMMMMMMMMMMMMM:::::::::::::::::::::MMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMM7MMMMMMMMMMMMMMMMMMMMMMN::::::::::::::::::MMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM:::::::::7:::::MMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMOMMMOMM~MMN??MMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMZ?NMMMMMMMMM??NMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM??MMMMMMMMMMM??MMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM8??ZMMMMMMMMMM????7IMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM?78???Z??OMMMMMMMMM???I??????MIOMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMM???????$??M?MMMMMMMMM?D???????Z?7MOMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM??NM7???MMMMMMMMM??87MMMMD?MMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+
+
+*********************************************************"
+    puts "*********************************************************
+
+    "
+    puts "Welcome to Mother Flocker, where you may one day find yourself becoming THE Mother Flocker!
+    "
+    puts "*********************************************************"
+    puts "*********************************************************
+
+    "
+    puts "Please enter your flock's first tweeter:"
+    @tweeters << gets.chomp
+    puts "Great! And what about an e-mail address?"
+    @email_array << gets.chomp
+    continue = "yes"
+    flock_count = 2
+    while continue == "yes"
+      puts "Please enter your flock's next tweeter:"
+      @tweeters << gets.chomp
+      puts "Great! And what about an e-mail address?"
+      @email_array << gets.chomp
+      if flock_count > 9
+        puts "*********************************************************"
+        puts "*********************************************************
+
+    "
+        puts "Oh! We're all flocked out at 10 tweeting little birds. We can't all be the Mother Flocker... Let's stop here.
+
+        "
+        continue = "no"
+      else
+        puts "Your flock currently has #{flock_count} tweeters. Would you like to enter another tweeter(yes/no)?"
+        continue = gets.chomp.downcase
+        flock_count += 1
+      end
+    end
+
+    puts "*********************************************************"
+    puts "*********************************************************
+
+    "
+    
+    puts "Your flock is born!
+
+    "
+    puts "Let the Mother Flocking begin!
+
+(Disclaimer: it can take a while to flock....)
+    "
+    puts "*********************************************************"
+    puts "*********************************************************
+
+    "
+    Email.send(@email_array,@tweeters)
+    puts "Your flock has just been e-mailed. Thanks for flocking!"
+  end
+
+  def self.send(emails,handles)
+    flock = Flock.new(handles)
     email_body = flock.email_format
     gmail = Gmail.connect(@@username, @@password)
     emails.each do |recipient|
@@ -182,12 +290,15 @@ class Flock
 
 @#{@flock_array.first[:handle]} is the Mother Flocker of the week!
 
+
       "  
     @flock_array.each do |tweeter|
       @email_output += "@#{tweeter[:handle]} | TOTAL POINTS: #{tweeter[:total_points]} | TOTAL RETWEETS: #{tweeter[:retweet_points]/2} | TOTAL MENTIONS: #{tweeter[:mention_points]/2} | TOTAL TWEETS: #{tweeter[:tweet_points]}
       
       "
     end
+
+    @email_output += "*** Points are calculated based off weekly statistics pulled from the Twitter API measuring: the number of tweets (up to five per day) by a given user, the consistency of tweets (used as a point modifier based off consecutive days a user is tweeting), number of user-originated tweets retweeted by other users, and number of mentions."
     # puts @email_output
     @email_output
   end
@@ -197,8 +308,8 @@ end
 # flock = Flock.new(['sagarispatel', 'lydiaguarino', 'youssifwashere'])
 # flock.email_format
 
-
-Email.send(['lydiahguarino@gmail.com','boydjj@gmail.com','abdulyoussif@gmail.com'])
+Email.get_handles
+# Email.send(['lydiahguarino@gmail.com','abdulyoussif@gmail.com'])
 
 
 
