@@ -2,15 +2,15 @@ require 'twitter'
 require 'gmail'
 
 Twitter.configure do |config|
-  config.consumer_key = ENV['YOUR_CONSUMER_KEY']
-  config.consumer_secret = ENV['YOUR_CONSUMER_SECRET']
-  config.oauth_token = ENV['YOUR_OAUTH_TOKEN']
-  config.oauth_token_secret = ENV['YOUR_OAUTH_TOKEN_SECRET']
+  config.consumer_key = '5s4qCd17vQHay8T9iyxQrQ'
+  config.consumer_secret = 'xnynhFlIKrPOpmAPVq7TcSJ4zwelPP8RVznPJlhos0'
+  config.oauth_token = '21982035-HUT8Fn9kqIORcMEjLCvtkSn1xCmjIeaACrQKurhUu'
+  config.oauth_token_secret = 'ohbYylKvM10yLYwhZtObv1juqmhXaQ8rBpvgbKIoV3E'
 end
 
 class Email
-  @@username = ENV['GMAILUSER']
-  @@password = ENV['GMAILPSWD']
+  @@username = 'motherflockerleaderboard'
+  @@password = 'workhardplayhard'
 
   def self.get_handles
     @tweeters = []
@@ -167,6 +167,7 @@ class Tweeter
     @tweets = []
     @tweets_per_day = [] #array contains number of tweets for each day of the week by index 0 being today and 6 being start of the week
     @total_tweets = 0
+    #we'll fix the date iteration so that we just make one call to the API by storing tweets into an array and calling on .created_at
     until i > (@dates.length-2) #until the last item in array, which we need to pull today's tweet
       @tweets << Twitter.search("from:#{handle}", :count => 5, :until => @dates[i], :since => @dates[i+1]).results.map do |status|
         "#{status.id}"
@@ -279,6 +280,7 @@ class Flock
     @flock_array = []
     @array.each do |handle|
       @flock_array << Tweeter.new(@@dates).total_points(handle)
+      # take handles and store that when initializing the object
     end
     @flock_array.sort_by! {|tweeter| tweeter[:total_points]}.reverse!
     @flock_array
