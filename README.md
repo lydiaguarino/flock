@@ -13,7 +13,7 @@ http://lgblog.lguarino.webfactional.com/2013/07/14/the-mother-flocker/
 Flock, or MotherFlocker is a game designed to encouraage meaningful Twitter contributions. 
 
 Tweeters compete against a selected peer group on the basis of overall tweets, retweets of original content, mentions and consective days of contributions.
-A leaderboard is emailed to the participants 
+A leaderboard is emailed to the participants. 
 
 Technologies used (on this iteration):
 Ruby
