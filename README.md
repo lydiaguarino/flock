@@ -2,9 +2,13 @@ flock
 =====
 
 First major MakerSquare Ruby project from week 3 of MakerSquare. 
-Partner: Youssif Abdulhamid
 
-A second iteration of this project is live at MotherFlocker.herokuapp.com.
+Partner: Youssif Abdulhamid
+The final version of the project code can be reviewed here:
+https://github.com/youssif/mother_flocker_rails_real
+
+A second iteration of this project is live at:
+http://motherflocker.herokuapp.com.
 See my blog post about this project here:
 http://lgblog.lguarino.webfactional.com/2013/07/14/the-mother-flocker/
 
